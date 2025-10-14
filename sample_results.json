@@ -1,0 +1,4 @@
+[
+  {"id":1,"title":"Login falla con usuario válido","severity":"high","status":"open","created":"2025-10-01"},
+  {"id":2,"title":"Campo teléfono no acepta +","severity":"medium","status":"open","created":"2025-10-02"}
+]
