@@ -1,22 +1,52 @@
-# Bug Report Generator
+#  Bug Report Generator & QA Suite
 
-Una herramienta diseñada para estandarizar la comunicación de incidentes técnicos entre los equipos de QA y Desarrollo. El objetivo es eliminar la ambigüedad en los reportes y reducir el tiempo de resolución de errores (MTTR).
+[![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![QA](https://img.shields.io/badge/QA-Testing-green?logo=checkmarx&logoColor=white)]()
+[![Status](https://img.shields.io/badge/Status-Professional_Grade-blue)]()
 
-###  Por qué usarlo?
-Un reporte mal redactado genera reprocesos. Esta herramienta asegura que cada incidencia contenga la información técnica mínima necesaria para ser procesada por un desarrollador sin necesidad de preguntas adicionales.
+Este proyecto es una herramienta de automatización para **Analistas de QA e Ingenieros de Software**. Permite transformar reportes técnicos en formato JSON a archivos CSV estructurados y priorizados, facilitando el triaje de errores en ciclos de desarrollo ágil.
 
-###  Características:
-- **Estandarización:** Genera reportes basados en las mejores prácticas de la industria (IEEE 829).
-- **Categorización:** Clasificación automática por Severidad y Prioridad.
-- **Formato Markdown:** Listo para copiar y pegar directamente en GitHub Issues, Jira o Azure DevOps.
+##  Características Principales
 
-###  Tecnologías:
-- **Lenguaje:** [Aquí pones si es Java, Python o JS]
-- **Lógica:** Validación de campos obligatorios y formateo de texto dinámico.
+* **Priorización Automática:** Ordena incidentes por severidad (Critical, High, Medium, Low) mediante lógica de pesos.
+* **Logging Profesional:** Implementa la librería `logging` para trazabilidad de errores en un archivo `execution.log`.
+* **Unit Testing:** Incluye una suite de pruebas con `unittest` para garantizar la integridad de la lógica de negocio.
+* **Exportación Estándar:** Genera archivos CSV compatibles con Microsoft Excel, Google Sheets y Jira.
 
-###  Ejemplo de Salida:
-> **ID:** BUG-001  
-> **Título:** Fallo de validación en campo de correo electrónico  
-> **Pasos:** 1. Ingresar a /registro, 2. Escribir 'test@@gmail.com', 3. Click en enviar.  
-> **Resultado Obtenido:** El sistema permite el registro con doble '@'.  
-> **Resultado Esperado:** El sistema debe mostrar un mensaje de error de formato.
+##  Tecnologías Utilizadas
+
+* **Python 3.14:** Lenguaje principal para la lógica de automatización.
+* **JSON/CSV:** Formatos de intercambio de datos estándar.
+* **Unittest:** Framework para pruebas unitarias.
+
+##  Instalación y Uso
+
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone [https://github.com/G-hio/bug-report-generator.git](https://github.com/G-hio/bug-report-generator.git)
+    cd bug-report-generator
+    ```
+
+2.  **Ejecutar la herramienta:**
+    Pasa tu archivo JSON como argumento:
+    ```bash
+    python generate_report.py sample_results.json
+    ```
+
+3.  **Ejecutar las pruebas unitarias:**
+    Para validar que el sistema funciona correctamente:
+    ```bash
+    python test_report.py
+    ```
+
+##  Ejemplo de Estructura JSON
+El sistema espera una estructura profesional como la siguiente:
+```json
+[
+  {
+    "id": "BUG-001",
+    "title": "Fallo de autenticación",
+    "severity": "critical",
+    "status": "open"
+  }
+]e formato.
