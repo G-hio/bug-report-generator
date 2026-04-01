@@ -1,54 +1,44 @@
 import json
 import csv
 import sys
+import logging
 from datetime import datetime
 from typing import List, Dict, Any
 
-# Configuracion de prioridades para el ordenamiento del reporte
-PRIORITY_MAP = {
-    'critical': 1,
-    'high': 2,
-    'medium': 3,
-    'low': 4
-}
+# Configuracion de Logging: Guarda un rastro de la ejecucion en 'execution.log'
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("execution.log"),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+
+PRIORITY_MAP = {'critical': 1, 'high': 2, 'medium': 3, 'low': 4}
 
 def load_results(path: str) -> List[Dict[str, Any]]:
-    """
-    Carga los resultados desde un archivo JSON.
-    Incluye validacion de existencia de archivo y formato interno.
-    """
+    """Carga datos JSON con manejo de errores profesional."""
     try:
         with open(path, 'r', encoding='utf-8') as f:
             return json.load(f)
-    except FileNotFoundError:
-        print(f"Error: El archivo '{path}' no fue localizado.")
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print(f"Error: El archivo '{path}' no contiene un JSON valido.")
+    except Exception as e:
+        logging.error(f"Error critico al cargar el archivo: {e}")
         sys.exit(1)
 
 def get_priority_weight(item: Dict[str, Any]) -> int:
-    """
-    Asigna un valor numerico a la severidad para permitir el ordenamiento.
-    Por defecto asigna prioridad media (3) si el campo no existe.
-    """
-    severity = item.get('severity', 'medium').lower()
-    return PRIORITY_MAP.get(severity, 3)
+    """Determina el peso de prioridad. Clave para las Pruebas Unitarias."""
+    severity = str(item.get('severity', 'low')).lower()
+    return PRIORITY_MAP.get(severity, 4)
 
 def generate_csv_report(results: List[Dict[str, Any]], output_file: str = 'bugs_report.csv'):
-    """
-    Procesa la lista de incidentes y genera un archivo CSV ordenado.
-    """
-    # Ordenamiento logico por severidad (de Critico a Bajo)
-    sorted_results = sorted(results, key=get_priority_weight)
-
+    """Genera el reporte final ordenado por relevancia."""
     try:
+        sorted_results = sorted(results, key=get_priority_weight)
+        
         with open(output_file, 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
-            
-            # Definicion de encabezados estandarizados
-            headers = ['ID', 'TITULO', 'SEVERIDAD', 'ESTADO', 'FECHA_CREACION']
-            writer.writerow(headers)
+            writer.writerow(['ID', 'TITULO', 'SEVERIDAD', 'ESTADO', 'FECHA'])
             
             for bug in sorted_results:
                 writer.writerow([
@@ -58,17 +48,14 @@ def generate_csv_report(results: List[Dict[str, Any]], output_file: str = 'bugs_
                     bug.get('status', 'open'),
                     bug.get('created', datetime.now().strftime('%Y-%m-%d'))
                 ])
-        
-        print(f"Reporte generado exitosamente: {output_file}")
-        print(f"Registros procesados: {len(sorted_results)}")
-        
+        logging.info(f"Reporte generado exitosamente: {output_file}")
     except IOError as e:
-        print(f"Error en la operacion de escritura de archivos: {e}")
+        logging.error(f"Fallo de escritura en disco: {e}")
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('Uso requerido: python generate_report.py <ruta_del_archivo.json>')
+        logging.warning("Ejecucion sin argumentos. Se requiere un archivo JSON.")
+        print('Uso: python generate_report.py sample_results.json')
     else:
-        file_input = sys.argv[1]
-        data_results = load_results(file_input)
-        generate_csv_report(data_results)
+        data = load_results(sys.argv[1])
+        generate_csv_report(data)
