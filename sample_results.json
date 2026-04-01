@@ -1,4 +1,35 @@
 [
-  {"id":1,"title":"Login falla con usuario válido","severity":"high","status":"open","created":"2025-10-01"},
-  {"id":2,"title":"Campo teléfono no acepta +","severity":"medium","status":"open","created":"2025-10-02"}
+  {
+    "id": "BUG-001",
+    "title": "Fallo de autenticación con credenciales válidas",
+    "severity": "critical",
+    "priority": "high",
+    "status": "open",
+    "environment": "Staging - Android 13",
+    "reproduction_steps": [
+      "Abrir la aplicación",
+      "Ingresar correo registrado",
+      "Ingresar contraseña válida",
+      "Presionar botón 'Entrar'"
+    ],
+    "expected_result": "Redirección al Dashboard del usuario.",
+    "actual_result": "Se muestra un error 500 y la aplicación se cierra.",
+    "created": "2025-10-01T14:30:00Z"
+  },
+  {
+    "id": "BUG-002",
+    "title": "Campo de teléfono rechaza caracteres especiales (+)",
+    "severity": "medium",
+    "priority": "low",
+    "status": "in_progress",
+    "environment": "Production - Chrome v122",
+    "reproduction_steps": [
+      "Ir a la sección de perfil",
+      "Intentar editar el número de teléfono",
+      "Ingresar '+57300...'"
+    ],
+    "expected_result": "El campo debe permitir el símbolo '+' para códigos internacionales.",
+    "actual_result": "El campo muestra un mensaje de 'Solo números permitidos'.",
+    "created": "2025-10-02T09:15:00Z"
+  }
 ]
